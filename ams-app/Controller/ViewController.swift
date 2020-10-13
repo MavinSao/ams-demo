@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 class ViewController: UIViewController {
 
@@ -13,12 +14,12 @@ class ViewController: UIViewController {
     
     var delegate: DetialDelegate?
     
-    var allArticles: [ArticleModel] = []
+    var allArticles: [ArticleModel]?
     override func viewDidLoad() {
         super.viewDidLoad()
         tableview.dataSource = self
         tableview.delegate = self
-        
+        SkeletonAppearance.default.multilineCornerRadius = 10
         loadArticle()
         
         tableview.rowHeight = UITableView.automaticDimension
@@ -28,6 +29,12 @@ class ViewController: UIViewController {
         tableview.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: "cell")
         
     }
+    
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        tableview.isSkeletonable = true
+//        tableview.showAnimatedSkeleton(usingColor: .gray,transition: .crossDissolve(0.25))
+//    }
     
     func loadArticle(){
         ArticleViewModel.shared.fetchArticle { (articles, err) in
@@ -39,17 +46,20 @@ class ViewController: UIViewController {
 }
 
 
-extension ViewController: UITableViewDelegate, UITableViewDataSource{
+extension ViewController: UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        allArticles.count
+        allArticles?.count ?? 10
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableview.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCell
         
-        cell.config(article: allArticles[indexPath.row])
+        if let allArticles = allArticles {
+            cell.hideAnimation()
+            cell.config(article: allArticles[indexPath.row])
+        }
 
         return cell
     }
@@ -57,10 +67,15 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
         
         let detailVC = storyboard?.instantiateViewController(identifier: "DetailView") as! DetailViewController
         self.delegate = detailVC
-        self.delegate?.didSent(article: allArticles[indexPath.row])
-        
-        self.navigationController?.pushViewController(detailVC, animated: true)
+        if let allArticles = allArticles {
+            self.delegate?.didSent(article: allArticles[indexPath.row])
+            self.navigationController?.pushViewController(detailVC, animated: true)
+        }
     }
+    
+//    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
+//        return "cell"
+//    }
     
     
 }

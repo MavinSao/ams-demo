@@ -1,0 +1,16 @@
+PODS:
+  - SkeletonView (1.8.5)
+
+DEPENDENCIES:
+  - SkeletonView
+
+SPEC REPOS:
+  trunk:
+    - SkeletonView
+
+SPEC CHECKSUMS:
+  SkeletonView: 3a8d8dd241eaa7e7bb3744bc000fed94fcd69823
+
+PODFILE CHECKSUM: e10fa2f25a4eec109c1cd850acdc65dabd450bfc
+
+COCOAPODS: 1.9.3

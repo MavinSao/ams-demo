@@ -12,6 +12,7 @@ struct ArticleModel {
     var articleID: Int?
     var title, description, createdDate: String?
     var image: UIImage?
+//    var profileIamage: UIImage?
     
     init(article: Article) {
         self.articleID = article.articleID
@@ -19,14 +20,18 @@ struct ArticleModel {
         self.description = article.articleDescription
         self.createdDate = article.createdDate
         
+        
         if let urlBgImage = URL(string: article.imageURL){
             do{
-              let data = try Data(contentsOf: urlBgImage)
-              self.image = UIImage(data: data)!
+              let dataImg = try Data(contentsOf: urlBgImage)
+//              let dataProfile = try Data(contentsOf: urlProfile)
+              self.image = UIImage(data: dataImg)!
+//              self.profileIamage = UIImage(data: dataProfile)
             }catch let err{
                 print("Error \(err)")
             }
         }
+        
          
 
     }
